@@ -5,9 +5,10 @@ This repository serves as the backend for the Encrypted Search Engine project bu
 This backend provides you with the following APIs:
 
 <hr>
+
 1. Indexing the encrypted data
 
-Every encrypted data point added by the user via [encrypted.sepana.io](encrypted.sepana.io) calls the indexing endpoint for being indexing the data, so that it can be later made searchable.
+Every encrypted data point added by the user via [encrypted.sepana.io](encrypted.sepana.io) calls the indexing endpoint for being indexed, so that it can be later made searchable.
 
 Two endpoints which can be used for indexing are as follows:
 
@@ -76,7 +77,7 @@ We need this to be able to allow the user to share their encrypted data with peo
 We have used [Lens APIs](https://lens.xyz/) for fetching this information.
 It comprises of two endpoints. The first one fetches the user's information from the Lens network using their wallet address. 
 
-Once, the user information is available, that be used to fetch the user's in their circles. For our use cases, we have fetched the information about their followers.
+Once, the user information is available, that be used to fetch the users in their circles (with whom their messages can be shared). For our use cases, we have fetched the information about their followers.
 
 Endpoints:
 
@@ -166,7 +167,7 @@ Example response:
 
 <hr>
 
-3. Search - This serves as endpoint which returns the results back from the indexed data
+3. Search - This serves as endpoint which returns the results back from the indexed data while the users search for them
 
 ```
 SearchQuerySchema{
