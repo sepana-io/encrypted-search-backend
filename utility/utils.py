@@ -9,6 +9,7 @@ from datetime import datetime, date
 from utility.model import (
     DataIngestionSchema,
     DocumentType,
+    ExchangeStructure,
     Permission,
     SearchQuerySchema
 )
@@ -28,7 +29,7 @@ transport = RequestsHTTPTransport(
 )
 client = Client(transport=transport, fetch_schema_from_transport=True)
 index_name = os.getenv("ENCRYPTED_INDEX_NAME", "encrypted_index_ethberlin")
-
+exchange_index = os.getenv("EXCHANGE_INDEX_NAME", "exchange_index")
 
 def raise_custom_exception(status_code=\
     status.HTTP_400_BAD_REQUEST, message=""):
@@ -211,4 +212,41 @@ def fetch_follower_list(user_lens_id: str):
             status_code=status.HTTP_400_BAD_REQUEST
         )
 
+def save_exchange_data(exchange: ExchangeStructure):
+    try:
+        data = {
+            "public_key": exchange.public_key,
+            "aes_key": exchange.aes_key
+        }
+        es.index(
+            index=exchange_index, body=data
+        )
+        return {
+            "message": "Exchange saved successfully!"
+        }
+    except Exception as err:
+        logger.error(err)
+        raise HTTPException(
+            detail=f"Could not save the exchange {err}",
+            status_code=status.HTTP_400_BAD_REQUEST
+        )
 
+def get_exchange_data(key: str):
+    try:
+        query = {
+            "query": {
+                "match_phrase": {
+                    "public_key": key
+                }
+            }
+        }
+        res = es.search(index=exchange_index, body=query)
+        return {
+            "exchange_data": res["hits"]["hits"]
+        }
+    except Exception as err:
+        logger.error(err)
+        raise HTTPException(
+            detail=f"Could not get the exchange {err}",
+            status_code=status.HTTP_400_BAD_REQUEST
+        )

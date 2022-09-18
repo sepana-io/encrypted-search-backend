@@ -37,3 +37,6 @@ class SearchQuerySchema(BaseModel):
     size: int = 10
 
 
+class ExchangeStructure(BaseModel):
+    public_key: str
+    aes_key: str
